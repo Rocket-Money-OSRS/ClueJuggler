@@ -1,1 +1,2 @@
-# ClueJuggler
+# Example
+An example greeter plugin
