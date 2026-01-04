@@ -24,19 +24,19 @@ A RuneLite plugin to track and categorize clue steps for efficient clue juggling
 The plugin highlights clue tiles and displays their status directly on the tile, making it easy to identify good and bad clues at a glance.
 
 <!-- Upload exampleimage.png to GitHub issue/release and replace URL below -->
-![In-Game Example](https://user-images.githubusercontent.com/placeholder/exampleimage.png)
+![In-Game Example](https://i.imgur.com/fNfVE44.png)
 
 ### Main Panel
 Create and manage multiple lists, mark clues as good/bad/custom, and import/export your configurations.
 
 <!-- Upload panel.png to GitHub issue/release and replace URL below -->
-![Main Panel](https://user-images.githubusercontent.com/placeholder/panel.png)
+![Main Panel](https://i.imgur.com/SoOSa7d.png)
 
 ### Settings Panel
 Customize tile highlight colors, text colors, and toggle various features to match your preferences.
 
 <!-- Upload settingspanel.png to GitHub issue/release and replace URL below -->
-![Settings Panel](https://user-images.githubusercontent.com/placeholder/settingspanel.png)
+![Settings Panel](https://i.imgur.com/rKM3xVN.png)
 
 ## Configuration
 
