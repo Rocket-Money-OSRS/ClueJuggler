@@ -67,10 +67,6 @@ Customize tile highlight colors, text colors, and toggle various features to mat
 6. Configure colors and settings to match your preferences
 7. Use import/export to share lists or backup your data
 
-## Known Issues
-
-- Beginner and Master clues require being read twice to properly update the overlay in the world view (works correctly for Easy/Medium/Hard/Elite clues)
-
 ## Requirements
 
 - Requires the Clue Scroll plugin to be enabled (built-in RuneLite plugin)
