@@ -15,6 +15,3 @@ examples/
 
 # README images (hosted externally)
 images/
-
-# Local gradle settings (use gradle.properties.example as template)
-gradle.properties
