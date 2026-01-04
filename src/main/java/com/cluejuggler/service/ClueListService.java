@@ -24,7 +24,7 @@ import net.runelite.client.config.ConfigManager;
 public class ClueListService
 {
 	private final ConfigManager configManager;
-	private final Gson gson = new Gson();
+	private final Gson gson;
 	
 	@Getter
 	private final Map<String, String> goodClueIdentifiers = new ConcurrentHashMap<>();
@@ -37,9 +37,10 @@ public class ClueListService
 	private boolean customListsLoaded = false;
 	
 	@Inject
-	public ClueListService(ConfigManager configManager)
+	public ClueListService(ConfigManager configManager, Gson gson)
 	{
 		this.configManager = configManager;
+		this.gson = gson;
 	}
 	
 	public void loadLists()
