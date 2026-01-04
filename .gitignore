@@ -12,3 +12,6 @@ reference_example/
 examples/
 
 .vscode/
+
+# README images (hosted externally)
+images/

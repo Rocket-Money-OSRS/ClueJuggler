@@ -1,5 +1,5 @@
 <h1>
-  <img src="images/cluejuggler.png" alt="Clue Juggler" width="32" height="32" style="vertical-align: middle; margin-right: 8px;">
+  <img src="https://raw.githubusercontent.com/Rocket-Money-OSRS/ClueJuggler/main/src/main/resources/cluejuggler.png" alt="Clue Juggler" width="32" height="32" style="vertical-align: middle; margin-right: 8px;">
   Clue Juggler
 </h1>
 
@@ -23,17 +23,20 @@ A RuneLite plugin to track and categorize clue steps for efficient clue juggling
 ### In-Game View
 The plugin highlights clue tiles and displays their status directly on the tile, making it easy to identify good and bad clues at a glance.
 
-![In-Game Example](images/exampleimage.png)
+<!-- Upload exampleimage.png to GitHub issue/release and replace URL below -->
+![In-Game Example](https://user-images.githubusercontent.com/placeholder/exampleimage.png)
 
 ### Main Panel
 Create and manage multiple lists, mark clues as good/bad/custom, and import/export your configurations.
 
-![Main Panel](images/panel.png)
+<!-- Upload panel.png to GitHub issue/release and replace URL below -->
+![Main Panel](https://user-images.githubusercontent.com/placeholder/panel.png)
 
 ### Settings Panel
 Customize tile highlight colors, text colors, and toggle various features to match your preferences.
 
-![Settings Panel](images/settingspanel.png)
+<!-- Upload settingspanel.png to GitHub issue/release and replace URL below -->
+![Settings Panel](https://user-images.githubusercontent.com/placeholder/settingspanel.png)
 
 ## Configuration
 
