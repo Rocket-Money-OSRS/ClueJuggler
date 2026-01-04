@@ -7,3 +7,8 @@ build
 nbactions.xml
 nb-configuration.xml
 nbproject/
+reference_example/
+
+examples/
+
+.vscode/

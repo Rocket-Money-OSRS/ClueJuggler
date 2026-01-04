@@ -14,7 +14,7 @@ repositories {
 }
 
 def runeLiteVersion = 'latest.release'
-def pluginMainClass = 'com.example.ExamplePluginTest'
+def pluginMainClass = 'com.cluejuggler.ClueJugglerPluginTest'
 
 dependencies {
 	compileOnly group: 'net.runelite', name:'client', version: runeLiteVersion
@@ -27,7 +27,7 @@ dependencies {
 	testImplementation group: 'net.runelite', name:'jshell', version: runeLiteVersion
 }
 
-group = 'com.example'
+group = 'com.cluejuggler'
 version = '1.0-SNAPSHOT'
 
 tasks.withType(JavaCompile).configureEach {
@@ -40,6 +40,17 @@ tasks.register('run', JavaExec) {
 	mainClass = pluginMainClass
 
 	jvmArgs "-ea"
+	jvmArgs "--add-opens=java.base/java.util=ALL-UNNAMED"
+	jvmArgs "--add-opens=java.base/java.lang=ALL-UNNAMED"
+	jvmArgs "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED"
+	jvmArgs "--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED"
+	jvmArgs "--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED"
+	jvmArgs "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED"
+	jvmArgs "--add-opens=java.base/java.nio.charset=ALL-UNNAMED"
+	jvmArgs "--add-opens=java.base/java.net=ALL-UNNAMED"
+	jvmArgs "--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED"
+	jvmArgs "--add-opens=jdk.httpserver/sun.net.httpserver=ALL-UNNAMED"
+	jvmArgs "--add-opens=java.base/com.sun.net.httpserver=ALL-UNNAMED"
 	args "--developer-mode", "--debug"
 }
 
