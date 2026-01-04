@@ -2,14 +2,14 @@ package com.cluejuggler.service;
 
 import com.cluejuggler.model.ClueList;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.JsonObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -166,12 +166,11 @@ public class ClueListService
 		
 		try
 		{
-			Type listType = new TypeToken<List<ClueList>>(){}.getType();
-			List<ClueList> loaded = gson.fromJson(customListsJson, listType);
+			ClueList[] loaded = gson.fromJson(customListsJson, ClueList[].class);
 			if (loaded != null)
 			{
 				customLists.clear();
-				customLists.addAll(loaded);
+				customLists.addAll(Arrays.asList(loaded));
 			}
 			customListsLoaded = true;
 		}
@@ -375,34 +374,36 @@ public class ClueListService
 	{
 		try
 		{
-			Type mapType = new TypeToken<java.util.Map<String, Object>>(){}.getType();
-			java.util.Map<String, Object> importData = gson.fromJson(json, mapType);
+			JsonObject importData = gson.fromJson(json, JsonObject.class);
 			
-			if (importData.containsKey("goodClues"))
+			if (importData.has("goodClues"))
 			{
-				@SuppressWarnings("unchecked")
-				java.util.Map<String, String> goodData = (java.util.Map<String, String>) importData.get("goodClues");
+				JsonObject goodData = importData.getAsJsonObject("goodClues");
 				goodClueIdentifiers.clear();
-				goodClueIdentifiers.putAll(goodData);
+				for (String key : goodData.keySet())
+				{
+					goodClueIdentifiers.put(key, goodData.get(key).getAsString());
+				}
 			}
 			
-			if (importData.containsKey("badClues"))
+			if (importData.has("badClues"))
 			{
-				@SuppressWarnings("unchecked")
-				java.util.Map<String, String> badData = (java.util.Map<String, String>) importData.get("badClues");
+				JsonObject badData = importData.getAsJsonObject("badClues");
 				badClueIdentifiers.clear();
-				badClueIdentifiers.putAll(badData);
+				for (String key : badData.keySet())
+				{
+					badClueIdentifiers.put(key, badData.get(key).getAsString());
+				}
 			}
 			
-			if (importData.containsKey("customLists"))
+			if (importData.has("customLists"))
 			{
-				String customListsJson = gson.toJson(importData.get("customLists"));
-				Type listType = new TypeToken<List<ClueList>>(){}.getType();
-				List<ClueList> imported = gson.fromJson(customListsJson, listType);
+				String customListsJson = importData.get("customLists").toString();
+				ClueList[] imported = gson.fromJson(customListsJson, ClueList[].class);
 				if (imported != null)
 				{
 					customLists.clear();
-					customLists.addAll(imported);
+					customLists.addAll(Arrays.asList(imported));
 				}
 			}
 			
