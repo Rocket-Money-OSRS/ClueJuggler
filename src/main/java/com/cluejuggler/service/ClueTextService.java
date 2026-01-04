@@ -393,42 +393,10 @@ public class ClueTextService
 		else if (clue instanceof AnagramClue)
 		{
 			AnagramClue anagramClue = (AnagramClue) clue;
-			try
+			net.runelite.api.coords.WorldPoint location = anagramClue.getLocation(clueScrollPlugin);
+			if (location != null)
 			{
-				String area = null;
-				try
-				{
-					java.lang.reflect.Field areaField = anagramClue.getClass().getDeclaredField("area");
-					areaField.setAccessible(true);
-					area = (String) areaField.get(anagramClue);
-				}
-				catch (Exception e)
-				{
-					try
-					{
-						java.lang.reflect.Method getAreaMethod = anagramClue.getClass().getMethod("getArea");
-						area = (String) getAreaMethod.invoke(anagramClue);
-					}
-					catch (Exception e2)
-					{
-					}
-				}
-				
-				if (area != null && !area.isEmpty())
-				{
-					return "Location: " + area;
-				}
-				else
-				{
-					net.runelite.api.coords.WorldPoint location = anagramClue.getLocation(clueScrollPlugin);
-					if (location != null)
-					{
-						return "Location: " + location.getX() + ", " + location.getY();
-					}
-				}
-			}
-			catch (Exception e)
-			{
+				return "Location: " + location.getX() + ", " + location.getY();
 			}
 			return "Anagram Clue";
 		}
@@ -504,41 +472,23 @@ public class ClueTextService
 	
 	public String generateMapClueText(ClueScroll clue)
 	{
-		try
+		if (clue instanceof MapClue)
 		{
-			java.lang.reflect.Field descriptionField = clue.getClass().getSuperclass().getDeclaredField("description");
-			descriptionField.setAccessible(true);
-			String description = (String) descriptionField.get(clue);
-			
-			if (description != null && !description.isEmpty())
+			MapClue mapClue = (MapClue) clue;
+			net.runelite.api.coords.WorldPoint location = mapClue.getLocation(clueScrollPlugin);
+			if (location != null)
 			{
-				return description;
+				return "Map: " + location.getX() + ", " + location.getY();
 			}
 		}
-		catch (Exception e)
+		else if (clue instanceof BeginnerMapClue)
 		{
-		}
-		
-		try
-		{
-			java.lang.reflect.Method getObjectIdsMethod = clue.getClass().getMethod("getObjectIds");
-			int[] objectIds = (int[]) getObjectIdsMethod.invoke(clue);
-			
-			if (objectIds != null && objectIds.length > 0 && objectIds[0] != -1)
+			BeginnerMapClue beginnerMapClue = (BeginnerMapClue) clue;
+			net.runelite.api.coords.WorldPoint location = beginnerMapClue.getLocation(clueScrollPlugin);
+			if (location != null)
 			{
-				net.runelite.api.ObjectComposition objectComp = client.getObjectDefinition(objectIds[0]);
-				if (objectComp != null)
-				{
-					return "Travel to the destination and click the " + objectComp.getName() + ".";
-				}
+				return "Map: " + location.getX() + ", " + location.getY();
 			}
-			else
-			{
-				return "Travel to the destination and dig on the marked tile.";
-			}
-		}
-		catch (Exception e)
-		{
 		}
 		
 		return "Map Clue";
