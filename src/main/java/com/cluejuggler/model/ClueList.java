@@ -1,4 +1,4 @@
-package com.cluejuggler;
+package com.cluejuggler.model;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -12,12 +12,12 @@ public class ClueList
 	private int textColorRGB;
 	private int tileColorRGB;
 	private int overlayTextColorRGB;
+	private boolean deprioritize = false;
 	private final List<String> clues = new ArrayList<>();
 	private final Map<String, String> clueIdentifiers = new HashMap<>();
 	
 	public ClueList()
 	{
-		// Default constructor for JSON deserialization
 	}
 	
 	public ClueList(String name, Color textColor, Color tileColor, Color overlayTextColor)
@@ -26,6 +26,17 @@ public class ClueList
 		this.textColorRGB = textColor != null ? textColor.getRGB() : Color.WHITE.getRGB();
 		this.tileColorRGB = tileColor != null ? tileColor.getRGB() : new Color(255, 255, 255, 100).getRGB();
 		this.overlayTextColorRGB = overlayTextColor != null ? overlayTextColor.getRGB() : Color.WHITE.getRGB();
+		this.deprioritize = false;
+	}
+	
+	public boolean isDeprioritize()
+	{
+		return deprioritize;
+	}
+	
+	public void setDeprioritize(boolean deprioritize)
+	{
+		this.deprioritize = deprioritize;
 	}
 	
 	public String getName()
@@ -57,7 +68,6 @@ public class ClueList
 	{
 		if (tileColor != null)
 		{
-			// Preserve alpha channel
 			int r = tileColor.getRed();
 			int g = tileColor.getGreen();
 			int b = tileColor.getBlue();
@@ -90,7 +100,6 @@ public class ClueList
 		return clueIdentifiers;
 	}
 	
-	// Getters/setters for JSON serialization
 	public int getTextColorRGB()
 	{
 		return textColorRGB;
