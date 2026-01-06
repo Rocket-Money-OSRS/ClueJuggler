@@ -129,6 +129,49 @@ public interface ClueJugglerConfig extends Config
 		return true;
 	}
 
+	@ConfigSection(
+		name = "Timers",
+		description = "Settings for clue despawn timers",
+		position = 30
+	)
+	String timersSection = "timersSection";
+
+	@ConfigItem(
+		keyName = "showTimers",
+		name = "Show Despawn Timers",
+		description = "Show despawn timers for good clues (and non-deprioritized custom lists)",
+		section = timersSection,
+		position = 1
+	)
+	default boolean showTimers()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "combineTimers",
+		name = "Combine Timers",
+		description = "Combine multiple timers into a single infobox showing the shortest time",
+		section = timersSection,
+		position = 2
+	)
+	default boolean combineTimers()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "timerNotificationSeconds",
+		name = "Notification Time (seconds)",
+		description = "Notify when timer reaches this many seconds (0 to disable)",
+		section = timersSection,
+		position = 3
+	)
+	default int timerNotificationSeconds()
+	{
+		return 30;
+	}
+
 	@ConfigItem(
 		keyName = "customLists",
 		name = "Custom Lists",

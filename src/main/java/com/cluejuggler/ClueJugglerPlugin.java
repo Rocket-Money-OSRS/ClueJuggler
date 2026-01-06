@@ -6,6 +6,7 @@ import com.cluejuggler.overlay.ClueJugglerWorldOverlay;
 import com.cluejuggler.service.ClueListService;
 import com.cluejuggler.service.ClueLookupService;
 import com.cluejuggler.service.ClueTextService;
+import com.cluejuggler.service.ClueTimerService;
 import com.cluejuggler.service.ClueTrackingService;
 import com.cluejuggler.ui.ClueJugglerPanel;
 import com.google.inject.Provides;
@@ -21,6 +22,7 @@ import net.runelite.api.TileItem;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemDespawned;
+import net.runelite.api.events.ItemSpawned;
 import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.events.WidgetLoaded;
@@ -97,8 +99,16 @@ public class ClueJugglerPlugin extends Plugin
 	@Getter
 	private ClueLookupService lookupService;
 
+	@Inject
+	@Getter
+	private ClueTimerService timerService;
+
 	@Getter
 	private ClueJugglerPanel panel;
+	
+	// Pending timer info - set when dropping a good clue, consumed when item spawns
+	private String pendingTimerListName = null;
+	private boolean hasPendingTimer = false;
 	private NavigationButton navButton;
 	private String currentClueText = null;
 
@@ -107,6 +117,7 @@ public class ClueJugglerPlugin extends Plugin
 	{
 		panel = injector.getInstance(ClueJugglerPanel.class);
 		panel.setPlugin(this);
+		timerService.setPlugin(this);
 
 		BufferedImage icon = ImageUtil.loadImageResource(getClass(), "/cluejuggler.png");
 
@@ -130,6 +141,9 @@ public class ClueJugglerPlugin extends Plugin
 		overlayManager.remove(worldOverlay);
 		currentClueText = null;
 		trackingService.clearTrackedClues();
+		timerService.clearAllTimers();
+		hasPendingTimer = false;
+		pendingTimerListName = null;
 	}
 
 	@Subscribe
@@ -159,6 +173,65 @@ public class ClueJugglerPlugin extends Plugin
 		{
 			trackingService.setLastProcessedClue(null);
 			trackingService.setLastClueWasTracked(false);
+		}
+		
+		// Update timers
+		timerService.onGameTick();
+	}
+
+	@Subscribe
+	public void onItemSpawned(ItemSpawned event)
+	{
+		if (!hasPendingTimer || client.getLocalPlayer() == null)
+		{
+			return;
+		}
+		
+		TileItem item = event.getItem();
+		if (item == null)
+		{
+			return;
+		}
+		
+		int itemId = item.getId();
+		boolean isClueScroll = false;
+		
+		if (itemId == ItemID.TRAIL_CLUE_BEGINNER || itemId == ItemID.TRAIL_CLUE_MASTER || itemId == 23182)
+		{
+			isClueScroll = true;
+		}
+		else
+		{
+			ItemComposition itemComp = itemManager.getItemComposition(itemId);
+			if (itemComp != null)
+			{
+				String itemName = itemComp.getName();
+				if (itemName != null && (itemName.startsWith("Clue scroll")
+					|| itemName.startsWith("Challenge scroll")
+					|| itemName.startsWith("Treasure scroll")))
+				{
+					isClueScroll = true;
+				}
+			}
+		}
+		
+		if (!isClueScroll)
+		{
+			return;
+		}
+		
+		WorldPoint itemLocation = event.getTile().getWorldLocation();
+		WorldPoint playerLocation = client.getLocalPlayer().getWorldLocation();
+		
+		// Only create timer if item spawned near player (within 2 tiles - they just dropped it)
+		if (itemLocation.distanceTo(playerLocation) <= 2)
+		{
+			timerService.addTimer(item, itemLocation, pendingTimerListName);
+			log.debug("Timer added for clue at {} (list: {})", itemLocation, pendingTimerListName);
+			
+			// Reset pending timer
+			hasPendingTimer = false;
+			pendingTimerListName = null;
 		}
 	}
 
@@ -450,6 +523,7 @@ public class ClueJugglerPlugin extends Plugin
 		{
 			WorldPoint tilePosition = event.getTile().getWorldLocation();
 			trackingService.clearDroppedClue(tilePosition);
+			timerService.removeTimerAtLocation(tilePosition);
 			log.debug("Clue despawned at {}, no more clues on tile", tilePosition);
 		}
 	}
@@ -523,6 +597,23 @@ public class ClueJugglerPlugin extends Plugin
 					trackingService.markDroppedClue(playerPosition, clueText, goodBadStatus, customList);
 					log.debug("Clue dropped via menu at {}: identifier={}, isGood={}, isBad={}, customList={}", 
 						playerPosition, clueIdentifier, isGood, isBad, customList != null ? customList.getName() : "null");
+					
+					// Set up timer for good clues or non-deprioritized custom lists
+					if (isGood)
+					{
+						hasPendingTimer = true;
+						pendingTimerListName = null;
+					}
+					else if (customList != null && !customList.isDeprioritize())
+					{
+						hasPendingTimer = true;
+						pendingTimerListName = customList.getName();
+					}
+					else
+					{
+						hasPendingTimer = false;
+						pendingTimerListName = null;
+					}
 				}
 			}
 			return;
