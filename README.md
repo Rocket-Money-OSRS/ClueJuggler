@@ -17,6 +17,7 @@ A RuneLite plugin to track and categorize clue steps for efficient clue juggling
 - **Import/Export**: Share your clue lists with others or backup your data
 - **Customizable Colors**: Adjust highlight and text colors for good, bad, unsure clues, and custom lists
 - **Smart Deprioritization**: Makes "Walk here" the default action for bad clues to prevent accidental pickup
+- **Clue Timers** - Juggling timers for you r "good" clue lists!
 
 ## Screenshots
 
