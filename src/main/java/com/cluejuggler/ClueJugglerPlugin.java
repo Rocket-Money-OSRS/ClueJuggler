@@ -628,7 +628,7 @@ public class ClueJugglerPlugin extends Plugin
 
 		if (menuOption.equals("Take"))
 		{
-			// Remove timer when picking up a clue
+			// Remove ONE timer when picking up a clue (supports stacked clues)
 			int itemId = event.getItemId();
 			if (itemId > 0)
 			{
@@ -647,8 +647,8 @@ public class ClueJugglerPlugin extends Plugin
 							event.getParam1(),
 							client.getPlane()
 						);
-						timerService.removeTimerAtLocation(clickedTile);
-						log.debug("Removed timer at {} on Take action", clickedTile);
+						timerService.removeOneTimerAtLocation(clickedTile, itemId);
+						log.debug("Removed one timer at {} on Take action (itemId {})", clickedTile, itemId);
 					}
 				}
 			}

@@ -140,6 +140,39 @@ public class ClueTimerService
 		}
 	}
 	
+	/**
+	 * Remove only ONE timer at the given location (for stacked clues).
+	 * Prefers matching itemId if provided.
+	 */
+	public void removeOneTimerAtLocation(WorldPoint location, int itemId)
+	{
+		TimedClue toRemove = null;
+		
+		// First try to find one matching the item ID
+		for (TimedClue timedClue : timedClues)
+		{
+			if (timedClue.getLocation().equals(location))
+			{
+				if (timedClue.getItemId() == itemId)
+				{
+					toRemove = timedClue;
+					break;
+				}
+				// Keep as fallback
+				if (toRemove == null)
+				{
+					toRemove = timedClue;
+				}
+			}
+		}
+		
+		if (toRemove != null)
+		{
+			timedClues.remove(toRemove);
+			log.debug("Removed one timer at {} (itemId {}), {} remaining", location, itemId, timedClues.size());
+		}
+	}
+	
 	public void onGameTick()
 	{
 		if (timedClues.isEmpty())
