@@ -3,6 +3,7 @@ package com.cluejuggler;
 import com.cluejuggler.model.ClueList;
 import com.cluejuggler.overlay.ClueJugglerOverlay;
 import com.cluejuggler.overlay.ClueJugglerWorldOverlay;
+import com.cluejuggler.overlay.ClueTimerOverlay;
 import com.cluejuggler.service.ClueListService;
 import com.cluejuggler.service.ClueLookupService;
 import com.cluejuggler.service.ClueTextService;
@@ -74,6 +75,9 @@ public class ClueJugglerPlugin extends Plugin
 	private ClueJugglerWorldOverlay worldOverlay;
 
 	@Inject
+	private ClueTimerOverlay timerOverlay;
+
+	@Inject
 	private ClueScrollPlugin clueScrollPlugin;
 
 	@Inject
@@ -117,7 +121,6 @@ public class ClueJugglerPlugin extends Plugin
 	{
 		panel = injector.getInstance(ClueJugglerPanel.class);
 		panel.setPlugin(this);
-		timerService.setPlugin(this);
 
 		BufferedImage icon = ImageUtil.loadImageResource(getClass(), "/cluejuggler.png");
 
@@ -131,6 +134,7 @@ public class ClueJugglerPlugin extends Plugin
 		clientToolbar.addNavigation(navButton);
 		overlayManager.add(overlay);
 		overlayManager.add(worldOverlay);
+		overlayManager.add(timerOverlay);
 	}
 
 	@Override
@@ -139,6 +143,7 @@ public class ClueJugglerPlugin extends Plugin
 		clientToolbar.removeNavigation(navButton);
 		overlayManager.remove(overlay);
 		overlayManager.remove(worldOverlay);
+		overlayManager.remove(timerOverlay);
 		currentClueText = null;
 		trackingService.clearTrackedClues();
 		timerService.clearAllTimers();
