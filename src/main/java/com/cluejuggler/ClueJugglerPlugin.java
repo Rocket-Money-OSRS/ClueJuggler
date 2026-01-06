@@ -626,9 +626,37 @@ public class ClueJugglerPlugin extends Plugin
 		
 		boolean shouldTrack = false;
 
-		if (menuOption.equals("Take") && shouldTrackOnPickup())
+		if (menuOption.equals("Take"))
 		{
-			shouldTrack = true;
+			// Remove timer when picking up a clue
+			int itemId = event.getItemId();
+			if (itemId > 0)
+			{
+				ItemComposition itemComp = itemManager.getItemComposition(itemId);
+				if (itemComp != null)
+				{
+					String itemName = itemComp.getName();
+					if (itemName != null && (itemName.startsWith("Clue scroll")
+						|| itemName.startsWith("Challenge scroll")
+						|| itemName.startsWith("Treasure scroll")))
+					{
+						// Get tile location from menu entry
+						WorldPoint clickedTile = WorldPoint.fromScene(
+							client,
+							event.getParam0(),
+							event.getParam1(),
+							client.getPlane()
+						);
+						timerService.removeTimerAtLocation(clickedTile);
+						log.debug("Removed timer at {} on Take action", clickedTile);
+					}
+				}
+			}
+			
+			if (shouldTrackOnPickup())
+			{
+				shouldTrack = true;
+			}
 		}
 		else if (menuOption.equals("Read") && !shouldTrackOnPickup())
 		{
